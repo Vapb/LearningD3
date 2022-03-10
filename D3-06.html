@@ -1,0 +1,30 @@
+<html>
+    <title>D3-06</title>
+<body>
+    <h1>D3-06</h1>
+
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+      const scale = d3.scaleLinear();
+      scale.domain([0, 100]);
+      scale.range([0, 1]);
+
+      const output1 = scale(0);
+      const output2 = scale(50);
+      const output3 = scale(100);
+
+      d3.select("body")
+        .append("h2")
+        .text("0 Scaled -> " + output1);
+
+      d3.select("body")
+        .append("h2")
+        .text("50 Scaled -> " + output2);
+
+      d3.select("body")
+        .append("h2")
+        .text("100 Scaled -> " + output3);
+
+
+    </script>
+  </body>

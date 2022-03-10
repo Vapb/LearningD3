@@ -1,33 +1,33 @@
 <html>
-  <title>D3-02</title>
-  <body>
-    <h1>D3-02</h1>
-
-    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <title>D3-02</title>
     
-    <script>
-      const dataset = [12, 31, 22, 17, 25, 18, 29, 14, 9];
-  
-      d3.select("body").selectAll("h3")
-        .data(dataset)
-        .enter()
-        .append("h3")
-        .text((d) => {
-          if (d > 20){
-              return  d + ' Maior que 20'
-          }
-          else{
-              return  d + ' Menor que 20'
-          }
-        })
-        .style("color", (d) => {
-          if (d > 20){
-              return 'green'
-          }
-          else{
-              return 'red'
-          }
-        });
+    <body>
+        <h1>D3-02</h1>
         
-    </script>
-  </body>
+        <script src="https://d3js.org/d3.v7.min.js"></script>
+        <script>
+            const dataset = [12, 31, 22, 17, 25, 18, 29, 14, 9];
+        
+            d3.select("body").selectAll("h3")
+              .data(dataset)
+              .enter()
+              .append("h3")
+              .text((d) => {
+                if (d > 20){
+                    return  d + ' Maior que 20'
+                }
+                else{
+                    return  d + ' Menor que 20'
+                }
+              })
+              .style("color", (d) => {
+                if (d > 20){
+                    return 'green'
+                }
+                else{
+                    return 'red'
+                }
+              });
+              
+        </script>
+    </body>
