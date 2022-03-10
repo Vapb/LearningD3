@@ -1,4 +1,6 @@
-<style>
+<html>
+  <title>D3-03</title>
+  <style>
     .bar {
       width: 25px;
       height: 100px;
@@ -8,10 +10,13 @@
     }
   </style>
   <body>
+    <h1>D3-03</h1>
+
     <script src="https://d3js.org/d3.v7.min.js"></script>
+
     <script>
       const dataset = [12, 31, 22, 17, 25, 18, 29, 14, 9];
-  
+
       d3.select("body").selectAll("div")
         .data(dataset)
         .enter()
@@ -19,13 +24,13 @@
         .attr("class", "bar")
         .style('height',(d) => d*10)
         .style('background-color', (d) => {
-            if (d > 20){
-                return 'green'
-            }
-            else{
-                return 'red'
-            }
-        })
+          if (d > 20){
+              return 'green'
+          }
+          else{
+              return 'red'
+          }
+        });
 
     </script>
   </body>
