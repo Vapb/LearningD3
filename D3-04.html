@@ -1,0 +1,51 @@
+<style>
+    .bar:hover {
+      fill: brown;
+    }
+</style>
+
+<body>
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <script>
+      const dataset = [12, 31, 22, 17, 25, 18, 29, 14, 9];
+  
+      const w = 500;
+      const h = 150;
+  
+      const svg = d3.select("body")
+                    .append("svg")
+                    .attr("width", w)
+                    .attr("height", h);
+  
+
+      svg.selectAll("rect")
+         .data(dataset)
+         .enter()
+         .append("rect")
+         .attr("x", (d, i) => {
+             return i * 30
+         })
+        //Note: In general, the relationship is y = h - m * d,
+        // where m is the constant that scales the data points.
+         .attr("y", (d) => {
+             return h - d * 3
+         })
+         .attr("width", 25)
+         .attr("height", (d) => (d * 3))
+         .attr('fill', "navy")
+         .attr('class', 'bar') //Set class
+         .append('title') // Tooltip
+         .text((d) => d);
+
+      
+      svg.selectAll("text")
+         .data(dataset)
+         .enter()
+         .append("text")
+         .attr("x", (d, i) => i * 30)
+         .attr("y", (d, i) => h - (d * 3) - 3)
+         .text((d) => d)
+         .style("font-size", "25px");
+    
+    </script>
+  </body>
