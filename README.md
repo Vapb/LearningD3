@@ -1,5 +1,4 @@
 # LearningD3
-## Learning D3.js
-* Data Visualization with D3 - 80%
-* JSON APIs and AJAX - 0%
-* Data Visualization Projects - 0%
+This project is based on a post I wrote for FreeCodeCamp about data visualization using D3.js. You can read the full article and explore the learning journey below:
+- [Data Visualization freeCodeCamp](https://vapb.github.io/vapb-blog/posts/d3js-learning/)
+- [FreeCodeCamp course](https://www.freecodecamp.org/learn/data-visualization/)
