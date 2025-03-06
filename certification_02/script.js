@@ -33,7 +33,7 @@ function prepareData(data) {
     let times = []
     let years = [] 
     data.forEach(row => {
-        times.push(timeToFloat(row['Time']))
+        times.push(60 - timeToFloat(row['Time']))
         years.push(row['Year'])
     })
     return [times, years]
@@ -41,7 +41,7 @@ function prepareData(data) {
 
 function generateScales(times, years) {
     xScale = d3.scaleLinear()
-                .domain([d3.min(years), d3.max(years)])
+                .domain([d3.min(years) - 1, d3.max(years)])
                 .range([padding, width - padding]);
 
     yScale = d3.scaleLinear()
@@ -64,16 +64,37 @@ function generateAxes() {
         .call(yAxis);
 }
 
+function drawBars(data, times, years) {
+    svg.selectAll("circle")
+        .data(data)
+        .enter()
+        .append("circle")
+        .attr('class', "dot")
+        .attr('cx', (d, i) => xScale(years[i]))
+        .attr('cy', (d, i) => yScale(times[i]))
+        .attr('r', 5)
+        .attr("data-xvalue", (d, i) => years[i])
+        .attr("data-yvalue", (d, i) => times[i])
+        .attr('fill', (item) => {
+            if(item['URL'] === ""){
+                return 'green'
+            }else{
+                return 'red'
+            }
+        })
+}
+
+
 
 async function main() {
     console.log('Start Main');
     drawCanvas(width, height);
     let dataset = await fetchData(url);
     let [times, years] = prepareData(dataset);
-    console.log(times)
+    console.log(dataset)
     generateScales(times, years);
     generateAxes();
-
+    drawBars(dataset, times, years);
 }
 
 main()
