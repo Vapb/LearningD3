@@ -9,6 +9,8 @@ let yScale
 
 let svg = d3.select('svg')
 
+let color = d3.scaleOrdinal(d3.schemeCategory10);
+
 function drawCanvas(width, height) {
     svg.attr('width', width)
     svg.attr('height', height)
@@ -24,16 +26,11 @@ async function fetchData(url) {
     }
 }
 
-function timeToFloat(timeStr) {
-    let [hours, minutes] = timeStr.split(":").map(Number);
-    return hours + minutes / 60;
-}
-
 function prepareData(data) {
     let times = []
     let years = [] 
     data.forEach(row => {
-        times.push(60 - timeToFloat(row['Time']))
+        times.push(new Date(row['Seconds'] * 1000))
         years.push(row['Year'])
     })
     return [times, years]
@@ -44,14 +41,17 @@ function generateScales(times, years) {
                 .domain([d3.min(years) - 1, d3.max(years)])
                 .range([padding, width - padding]);
 
-    yScale = d3.scaleLinear()
+    yScale = d3.scaleTime()
                 .domain([d3.min(times), d3.max(times)])
-                .range([height - padding, padding]);
+                .range([padding, height - padding]);
 }
 
 function generateAxes() {
     let xAxis = d3.axisBottom(xScale)
+                  .tickFormat(d3.format('d'));
+
     let yAxis = d3.axisLeft(yScale)
+                  .tickFormat(d3.timeFormat("%M:%S"));
 
     svg.append("g")
         .attr("id", "x-axis")
@@ -75,13 +75,43 @@ function drawBars(data, times, years) {
         .attr('r', 5)
         .attr("data-xvalue", (d, i) => years[i])
         .attr("data-yvalue", (d, i) => times[i])
-        .attr('fill', (item) => {
-            if(item['URL'] === ""){
-                return 'green'
-            }else{
-                return 'red'
-            }
+        .style('fill', function (d) {
+            return color(d.Doping !== '');
         })
+}
+
+function drawLegend() {
+    let legendContainer = svg.append('g').attr('id', 'legend');
+    
+    let legend = legendContainer
+        .selectAll('#legend')
+        .data(color.domain())
+        .enter()
+        .append('g')
+        .attr('class', 'legend-label')
+        .attr('transform', function (d, i) {
+            return 'translate('+ (-padding) + ',' + (height / 2.5 - i * 20) + ')';
+        });
+
+    legend.append('rect')
+        .attr('x', width - 18)
+        .attr('width', 18)
+        .attr('height', 18)
+        .style('fill', color);
+
+    legend.append('text')
+        .attr('x', width - 24)
+        .attr('y', 9)
+        .attr('dy', '.35em')
+        .style('text-anchor', 'end')
+        .text(function (d) {
+            if (d) {
+            return 'Riders with doping allegations';
+            } else {
+            return 'No doping allegations';
+            }
+        });
+
 }
 
 
@@ -95,6 +125,7 @@ async function main() {
     generateScales(times, years);
     generateAxes();
     drawBars(dataset, times, years);
+    drawLegend();
 }
 
 main()
