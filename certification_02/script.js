@@ -64,7 +64,13 @@ function generateAxes() {
         .call(yAxis);
 }
 
-function drawBars(data, times, years) {
+function drawDots(data, times, years) {
+    let tooltip = d3.select('body')
+        .append('div')
+        .attr('id', 'tooltip')
+        //.style('opacity', 0)
+        .style('visibility', 'hidden')
+
     svg.selectAll("circle")
         .data(data)
         .enter()
@@ -77,6 +83,22 @@ function drawBars(data, times, years) {
         .attr("data-yvalue", (d, i) => times[i])
         .style('fill', function (d) {
             return color(d.Doping !== '');
+        })
+        .on('mouseover', (e, d) => {
+            tooltip.transition()
+                //.duration(200).style('opacity', 0.9);
+                .style('visibility', 'visible')
+                .style('background-color', () => color(d.Doping !== ''));
+
+            tooltip.html(`${d.Year}` + '</br>' +  `${d.Time}`)
+                .style('left', (event.pageX + 10) + 'px')  // Position near cursor
+                .style('top', (event.pageY - 30) + 'px');  // Slightly above cursor
+                
+            document.querySelector('#tooltip').setAttribute('data-year', d.Year)
+        })
+        .on('mouseout', (e, d) => {
+            tooltip.style('visibility', 'hidden')
+            //tooltip.transition().duration(200).style('opacity', 0);
         })
 }
 
@@ -124,7 +146,7 @@ async function main() {
     console.log(dataset)
     generateScales(times, years);
     generateAxes();
-    drawBars(dataset, times, years);
+    drawDots(dataset, times, years);
     drawLegend();
 }
 
