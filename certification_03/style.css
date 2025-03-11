@@ -1,0 +1,17 @@
+body{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+svg{
+    display: block;
+    border: 1px solid black;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+h1, h2 {
+    margin-top: 0px;
+}
