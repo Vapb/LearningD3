@@ -1,7 +1,7 @@
 // SVG
 const url = 'https://raw.githubusercontent.com/freeCodeCamp/ProjectReferenceData/master/global-temperature.json'
 const height = 500;
-const width = 1100;
+const width = 1500;
 const padding = 60;
 
 let xScale
@@ -9,7 +9,6 @@ let yScale
 
 let svg = d3.select('svg')
 
-let color = d3.scaleOrdinal(d3.schemeCategory10);
 
 function drawCanvas(width, height) {
     svg.attr('width', width)
@@ -29,21 +28,27 @@ async function fetchData(url) {
 function prepareData(data) {
     let months = []
     let years = [] 
+    let variances = []
     data['monthlyVariance'].forEach(row => {
         years.push(row['year'])
         months.push(row['month'])
+        variances.push(row['variance'])
     })
-    return [years, months]
+    return [data['monthlyVariance'], years, months, variances]
 }
 
-function generateScales(years, months) {
+function generateScales(years, months, variances) {
     xScale = d3.scaleLinear()
                 .domain([d3.min(years), d3.max(years)])
                 .range([padding, width - padding]);
 
     yScale = d3.scaleLinear()
-                .domain([d3.min(months), d3.max(months)])
+                .domain([d3.min(months) - 1, d3.max(months)])
                 .range([padding, height - padding]);
+
+    colorScale = d3.scaleSequential()
+                    .domain([d3.min(variances), d3.max(variances)])
+                    .interpolator(d3.interpolateViridis);
 }
 
 function generateAxes() {
@@ -62,15 +67,35 @@ function generateAxes() {
         .call(yAxis);
 }
 
+function drawBars(data, years, months, variances) {
+    svg.selectAll("rect")
+        .data(data)
+        .enter()
+        .append("rect")
+        .attr("fill", "navy")
+        .attr("class", "bar")
+        .attr("x", (d, i) => xScale(years[i]))
+        .attr("y", (d, i) => yScale(months[i] - 1))
+        .attr("width", ((width - (2 * padding))/(data.length/12)))
+        .attr("height", ((height - (2 * padding))/(12)))
+        .attr("data-xvalue", (d, i) => years[i])
+        .attr("data-yvalue", (d, i) => months[i])
+        .style('fill', function (d, i) {
+            return colorScale(variances[i])
+        })
+        ;
+}
 
 
 async function main() {
     console.log('Start Main');
     drawCanvas(width, height);
     let dataset = await fetchData(url);
-    let [years, months] = prepareData(dataset);
-    generateScales(years, months);
+    let [data, years, months, variances] = prepareData(dataset);
+    console.log(data)
+    generateScales(years, months, variances);
     generateAxes();
+    drawBars(data, years, months, variances)
 }
 
 main()
