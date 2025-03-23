@@ -7,11 +7,31 @@ body{
 
 svg{
     display: block;
-    border: 1px solid black;
     margin-left: auto;
     margin-right: auto;
 }
 
+#canvas {
+    border: 1px solid black;
+    margin-bottom: 2rem;
+}
+
+
 h1, h2 {
     margin-top: 0px;
 }
+
+#tooltip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    text-align: center;
+    width: 150px;
+    height: 50px;
+    padding: 2px;
+    font: 12px;
+    box-shadow: 1px 1px 10px;
+    border-radius: 2px;
+    pointer-events: none;
+  }
